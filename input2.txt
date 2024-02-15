@@ -1,0 +1,13 @@
+mole64 a, b, c;
+mole32 d, e;
+
+a = 5;
+b = a;
+
+filter (a > b) {
+	c = a;
+	e = d - 2.0;
+} funnel {
+	d = e + 6;
+	b = a + c;
+}
