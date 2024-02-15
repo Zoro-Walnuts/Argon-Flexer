@@ -734,7 +734,7 @@ class scanBasic {
         // write to file
         FileWriter writer = new FileWriter(outFile);
         writer.write(output);
-        writer.write("\n\nTokens List: ");
+        writer.write("\n\nTokens List: \n");
         for (String token : tokens)
             writer.write(token + "\n");
         writer.close();
