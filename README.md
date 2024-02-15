@@ -12,9 +12,9 @@
 
 ## Output
 - The tokenlist and the output will be printed to terminal
-- Additionally, a txt [output file]() will be made/overwritten
+- Additionally, a txt [output file](output.txt) will be made/overwritten
 	- Has the input translated into tokens
 	- Has the tokens list after runtime (includes IDs and Numerical Literals)
 
 ## Tokens List
-- The [Tokens List File]() has all the possible tokens for the scanner (excluding IDs and Numerical Literals which will be added during runtime)
+- The [Tokens List File](tokenList.txt) has all the possible tokens for the scanner (excluding IDs and Numerical Literals which will be added during runtime)
