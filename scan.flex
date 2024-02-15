@@ -60,14 +60,13 @@ import java.io.*;
 
 LINETERMINATE   = \r|\n|\r\n
 WHITESPACE      = {LINETERMINATE} | [\s\t\f]
-NUMLIT          = [0-9]+ | 0[b[0|1]* | c[0-7]* | x([0-9]| [A-Fa-f])* ]/* integer only */
-ID              = _(([a-zA-Z] | [0-9]) )* | [a-zA-Z](([a-zA-Z] | [0-9]) | _ )*
+NUMLIT          = [0-9]+|0b[01]+|0c[0-7]+|0x[0-9A-Fa-f]+/* integer only */
+ID              = [a-zA-Z_][a-zA-Z0-9_]*
 INVALID_ID      = {NUMLIT}{ID}
-INVALID_NUM  = {NUMLIT}\.{NUMLIT}
+INVALID_NUM     = {NUMLIT}\.{NUMLIT}
 ESCSEQ          = [\\][ n | t | r | b | \\ | \' | \" | f]
-COMMENT         = \/\/(.)*\n | \/\*(.)*\*\/
 
-%state FALLBACK
+%state FALLBACK, LINECOMMENT, BLOCKCOMMENT
 
 %%
 <YYINITIAL> {
@@ -127,12 +126,13 @@ COMMENT         = \/\/(.)*\n | \/\*(.)*\*\/
     "{"             { output += tokens.get(46); }
     "}"             { output += tokens.get(47); }
     {ESCSEQ}        { output += tokens.get(48); }
-    {COMMENT}       { output += tokens.get(49); }
     {WHITESPACE}    { output += yytext(); }
 
+    /* COMMENTS */
+    "\/\/"          { yybegin(LINECOMMENT); output += tokens.get(49); } // detect line comment
+    "\/\*"          { yybegin(BLOCKCOMMENT); output += tokens.get(50) + " "; } // detect open block comment with space so output is neat
+
     /* LITERALS */
-    {INVALID_ID}    { output += "!!! Invalid ID \"" + yytext() + "\" at line " + yyline + " !!!"; }
-    {INVALID_NUM}   { output += "!!! Invalid NUMLIT \"" + yytext() + "\" at line " + yyline + " !!!"; }
     {NUMLIT}        { tokens.add(yytext()); output += tokens.get(23) + "(" + tokens.get(tokens.size()-1) +")"; }
     {ID}            {
                         if (tokens.contains(yytext())){
@@ -142,13 +142,26 @@ COMMENT         = \/\/(.)*\n | \/\*(.)*\*\/
                             output += tokens.get(24) + "(" + tokens.get(tokens.size()-1) +")";
                         }
                     }
+    {INVALID_ID}    { output += "!!! Invalid ID \"" + yytext() + "\" at line " + yyline + " !!!"; }
+    {INVALID_NUM}   { output += "!!! Invalid NUMLIT \"" + yytext() + "\" at line " + yyline + " !!!"; }
 
     /* UNRECOGNIZED */
     [^]             { yybegin(FALLBACK); }
 }
 
+<LINECOMMENT> {
+    "\n" { yybegin(YYINITIAL); output += yytext(); }
+    . {/* ignore everything in this line except newlines*/}
+}
+
+<BLOCKCOMMENT> {
+    // detect close block comment with newline so output is neat
+    "\*\/"          { yybegin(YYINITIAL); output += tokens.get(51) + "\n"; }
+    [^]             {/* ignore everything in this line including newlines*/}
+}
+
 <FALLBACK> {
-    [^] { output += "unrecognized: \"" + yytext() + "\" at line " + yyline + " "; }
+    [^]             { output += "unrecognized: \"" + yytext() + "\" at line " + yyline + " "; }
 }
 
 
