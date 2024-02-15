@@ -126,7 +126,7 @@ ESCSEQ          = [\\][n|t|r|b|\\|\'|\"|f]
     "{"             { output += tokens.get(46); }
     "}"             { output += tokens.get(47); }
     {ESCSEQ}        { output += tokens.get(48); }
-    {WHITESPACE}    { output += yytext(); }
+    {WHITESPACE}    { output += yytext(); } // add whitespace to ouput for neatness
 
     /* COMMENTS */
     "\/\/"          { yybegin(LINECOMMENT); output += tokens.get(49); } // detect line comment
