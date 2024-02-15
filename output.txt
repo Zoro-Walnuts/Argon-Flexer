@@ -26,9 +26,14 @@ NUMLIT(45678)
 NUMLIT(0b10101101)
 NUMLIT(0c612674)
 NUMLIT(0xef1ce347)
+!!! Invalid NUMLIT "2.0" at line 28 !!!
+!!! Invalid NUMLIT "52.132" at line 29 !!!
 ID(thisIsAnID)
 ID(anotherID)
 ID(thisIsAnID)
+ID(_UnderscoreID)
+ID(____)
+!!! Invalid ID "123NotAnID" at line 35 !!!
 ID(a)
 ID(b)
 ID(alkan)
@@ -127,6 +132,8 @@ CLOSEBLKCMT
 0xef1ce347
 thisIsAnID
 anotherID
+_UnderscoreID
+____
 a
 b
 alkan

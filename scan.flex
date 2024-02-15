@@ -64,7 +64,7 @@ NUMLIT          = [0-9]+|0b[01]+|0c[0-7]+|0x[0-9A-Fa-f]+/* integer only */
 ID              = [a-zA-Z_][a-zA-Z0-9_]*
 INVALID_ID      = {NUMLIT}{ID}
 INVALID_NUM     = {NUMLIT}\.{NUMLIT}
-ESCSEQ          = [\\][ n | t | r | b | \\ | \' | \" | f]
+ESCSEQ          = [\\][n|t|r|b|\\|\'|\"|f]
 
 %state FALLBACK, LINECOMMENT, BLOCKCOMMENT
 
